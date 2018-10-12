@@ -1,6 +1,8 @@
 package Pokemon;
 
+import static com.sun.corba.se.impl.orbutil.CorbaResourceUtil.getText;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -9,12 +11,16 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import javax.swing.table.DefaultTableModel;
+import sun.util.locale.provider.AuxLocaleProviderAdapter;
 
 
 
@@ -23,7 +29,9 @@ import javax.swing.ImageIcon;
  * @author jorgecisneros
  */
 public class VentanaPokedex extends javax.swing.JFrame {
-
+    ResultSet buscador;
+     int contador3 = 0;
+      ArrayList<String[]> buscaPokemon = new ArrayList();
     BufferedImage plantilla = null;
     private int contador = 0;
     private int ancho = 200, alto = 200;
@@ -53,14 +61,29 @@ public class VentanaPokedex extends javax.swing.JFrame {
         Pokemon p = listaPokemons.get(String.valueOf(contador+1));
         if (p != null){
             jLabel1.setText(p.nombre);
+            jLabel5.setText(p.weight);
+            jLabel7.setText(p.tipo);
+            jLabel9.setText(p.height);
+            jLabel11.setText(p.color);
+            jLabel13.setText(p.habitat);
+            
         }
         else {
             jLabel1.setText("NO HAY DATOS");
+            jLabel5.setText("NO HAY DATOS");
+            jLabel7.setText("NO HAY DATOS");
+            jLabel9.setText("NO HAY DATOS");
+            jLabel11.setText("NO HAY DATOS");
+            jLabel13.setText("NO HAY DATOS");
+            
+            
         }
     }
 
     public VentanaPokedex() {
         initComponents();
+//        jPanel1.setVisible(true);
+//        jPanel2.setVisible(true);
         try{
             plantilla = ImageIO.read(getClass().getResource("black-white.png"));
         }
@@ -69,13 +92,18 @@ public class VentanaPokedex extends javax.swing.JFrame {
         //conexion a la base de datos//////////////////
         try{
             Class.forName("com.mysql.jdbc.Driver");
-            conexion = DriverManager.getConnection("jdbc:mysql://127.0.0.1/test","root","root");
+            conexion = DriverManager.getConnection("jdbc:mysql://127.0.0.1/pokemon","root","root");
             estado = conexion.createStatement();
             resultadoConsulta = estado.executeQuery("Select * from pokemon");
             //cargo el resultado de la query en mi hashmap
             while (resultadoConsulta.next()){
                 Pokemon p = new Pokemon();
                 p.nombre = resultadoConsulta.getString(2);
+                p.weight = resultadoConsulta.getString(11);
+                p.tipo = resultadoConsulta.getString(12);
+                p.height = resultadoConsulta.getString(10);
+                p.color = resultadoConsulta.getString(13);
+                p.habitat = resultadoConsulta.getString(15);
                 p.generation_id = resultadoConsulta.getInt(5);
                 p.evolution_chain_id = resultadoConsulta.getInt(6);
                 p.species = resultadoConsulta.getString(12);
@@ -90,6 +118,9 @@ public class VentanaPokedex extends javax.swing.JFrame {
         escribeDatos();
     }
 
+    
+    
+    
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -99,21 +130,114 @@ public class VentanaPokedex extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jButton4 = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
         jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jLabel4.setText("PESO");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 420, 60, 20));
+
+        jLabel5.setText("jLabel5");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 420, 100, 30));
+
+        jLabel6.setText("ESPECIE");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 390, 50, 20));
+
+        jLabel7.setText("jLabel7");
+        getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 390, -1, -1));
+
+        jLabel8.setText("TAMAÑO");
+        getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 450, -1, 30));
+
+        jLabel9.setText("jLabel9");
+        getContentPane().add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 460, -1, -1));
+
+        jLabel10.setText("COLOR");
+        getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 520, -1, -1));
+
+        jLabel11.setText("jLabel11");
+        getContentPane().add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 520, -1, -1));
+
+        jLabel12.setText("HABITAT");
+        getContentPane().add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 490, -1, -1));
+
+        jTextField1.setText("jTextField1");
+        jTextField1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jTextField1MousePressed(evt);
+            }
+        });
+        jTextField1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jTextField1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(290, 560, -1, -1));
+
+        jButton4.setText("buscar");
+        jButton4.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jButton4MousePressed(evt);
+            }
+        });
+        getContentPane().add(jButton4, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 560, -1, -1));
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 50, 300, 220));
+
+        jLabel13.setText("jLabel13");
+        getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(470, 490, -1, -1));
+
+        jLabel14.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/BOTON.png"))); // NOI18N
+        getContentPane().add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 580, 20, 30));
+
+        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/BOTON_1.png"))); // NOI18N
+        jLabel15.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jLabel15MousePressed(evt);
+            }
+        });
+        getContentPane().add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 580, 20, -1));
+
+        jLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 18)); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 220, 200, 41));
+
+        jLabel3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/imagenes/pokedex_vector_style_by_cristopheros-d5imu6t.png"))); // NOI18N
+        getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 770, 640));
+
+        jButton1.setBackground(new java.awt.Color(153, 153, 153));
+        jButton1.setForeground(new java.awt.Color(153, 153, 153));
         jButton1.setText("izquierda");
         jButton1.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 jButton1MousePressed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 350, -1, -1));
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(130, 470, 50, 30));
 
         jButton2.setText("derecha");
         jButton2.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -121,11 +245,15 @@ public class VentanaPokedex extends javax.swing.JFrame {
                 jButton2MousePressed(evt);
             }
         });
-        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 350, -1, -1));
+        getContentPane().add(jButton2, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 470, 60, 50));
 
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 290, 200, 41));
-        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 230, 230));
+        jButton3.setText("jButton3");
+        jButton3.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                jButton3MousePressed(evt);
+            }
+        });
+        getContentPane().add(jButton3, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 580, 40, 40));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -144,6 +272,53 @@ public class VentanaPokedex extends javax.swing.JFrame {
         jLabel2.setIcon(devuelveElPokemonQueEstaEnLaPosicion(contador));
         escribeDatos();
     }//GEN-LAST:event_jButton2MousePressed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void jButton3MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton3MousePressed
+       System.exit(0);
+    }//GEN-LAST:event_jButton3MousePressed
+
+    private void jLabel15MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jLabel15MousePressed
+//        jPanel1.setVisible(true);
+//        jPanel2.setVisible(false);
+    }//GEN-LAST:event_jLabel15MousePressed
+
+    private void jTextField1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jTextField1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jTextField1ActionPerformed
+
+    private void jTextField1MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jTextField1MousePressed
+
+    }//GEN-LAST:event_jTextField1MousePressed
+
+    private void jButton4MousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButton4MousePressed
+        String texto = jTextField1.getText();
+        buscaPokemon.clear();
+        contador3 = 0;
+        String[] aux = null;
+         
+
+        try {
+            buscador = estado.executeQuery("SELECT * FROM pokemon WHERE name LIKE '%" + texto + "%'");
+
+            while (buscador.next()) {
+                jLabel2.setText(aux[0]);
+                String[] aux3 = new String[8];
+                
+               
+                buscaPokemon.add(aux3);
+                 aux3[0] = buscador.getString("name");
+            }
+           
+            System.out.println(jLabel2.getText());
+
+        } catch (SQLException ex) {
+            Logger.getLogger(VentanaPokedex.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton4MousePressed
 
     /**
      * @param args the command line arguments
@@ -183,7 +358,23 @@ public class VentanaPokedex extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
+    private javax.swing.JButton jButton4;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JTextField jTextField1;
     // End of variables declaration//GEN-END:variables
 }
